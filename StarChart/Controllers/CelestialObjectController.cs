@@ -28,7 +28,7 @@ namespace StarChart.Controllers
             var celestialObject = _context.CelestialObjects.Find(id);//This method should return `NotFound` there is no `CelestialObject` with an `Id` property that matches the parameter
             if (celestialObject == null)
                 return NotFound();
-            celestialObject.Satellites = _context.CelestialObjects.Where(CelestialObjects => celestialObject.OrbitedObjectId == id).ToList(); //This method should also set the `Satellites` property to any `CelestialObjects` who's `OrbitedObjectId` is the current `CelestialObject`'s `Id`.
+            celestialObject.Satellites = _context.CelestialObjects.Where(e => e.OrbitedObjectId == id).ToList(); //This method should also set the `Satellites` property to any `CelestialObjects` who's `OrbitedObjectId` is the current `CelestialObject`'s `Id`.
            return Ok(celestialObject);//This method should return an `Ok` with a value of the `CelestialObject` who's `Id` property matches the `id` parameter.
         }
 
@@ -37,12 +37,12 @@ namespace StarChart.Controllers
         [HttpGet ("{name}")]//This method should have an `HttpGet` attribute with a value of `"{name}"`.
         public IActionResult GetByName(string name)//This method should have a return type of `IActionResult`.This method should accept a parameter of type `string` named `name`. 
         {
-            var celestialObjects = _context.CelestialObjects.Where(CelestialObjects => CelestialObjects.Name == name).ToList();
+            var celestialObjects = _context.CelestialObjects.Where(e=> e.Name == name).ToList();
             if (!celestialObjects.Any())
                 return NotFound();//This method should return `NotFound` there is no `CelestialObject` with an `Name` property that matches the `name` parameter.
             foreach(var celestialObject in celestialObjects)
             {
-                celestialObject.Satellites = _context.CelestialObjects.Where(CelestialObjects =>  celestialObject.OrbitedObjectId == celestialObject.Id).ToList(); //This method should also set the `Satellites` property for each `CelestialObject` who's `OrbitedObjectId` is the current `CelestialObject`'s `Id`.
+                celestialObject.Satellites = _context.CelestialObjects.Where(e =>  e.OrbitedObjectId == celestialObject.Id).ToList(); //This method should also set the `Satellites` property for each `CelestialObject` who's `OrbitedObjectId` is the current `CelestialObject`'s `Id`.
             }
               return Ok(celestialObjects);//This method should return an `Ok` with a value of the list of `CelestialObject` who's `Name` property matches the `name` parameter
         }
@@ -52,9 +52,9 @@ namespace StarChart.Controllers
         public IActionResult GetAll() //Create the `GetAll` method. This method should have a return type of `IActionResult`.
         {
             var celestialObjects = _context.CelestialObjects.ToList();
-            foreach(var celestialObject in celestialObjects)
+            foreach(var celestialObject in celestialObjects)//This method should also set the `Satellites` property for each of the `CelestialObject`s returned.
             {
-                celestialObject.Satellites = _context.CelestialObjects.Where(CelestialObject => celestialObject.OrbitedObjectId == celestialObject.Id).ToList();//This method should also set the `Satellites` property for each of the `CelestialObject`s returned.
+                celestialObject.Satellites = _context.CelestialObjects.Where(e => e.OrbitedObjectId == celestialObject.Id).ToList();
             }
             return Ok(celestialObjects);// This method should return `Ok` with a value of all `CelestialObjects`s.
         }
